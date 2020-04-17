@@ -2,7 +2,7 @@ package logre
 
 import (
 	"encoding/json"
-	"github.com/rawnly/logre/configuration"
+	"github.com/rawnly/go-logre/configuration"
 	"net/http"
 )
 

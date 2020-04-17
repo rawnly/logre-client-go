@@ -5,7 +5,7 @@ This *logre* package provides a fast way to push your logs into [logre.io][logre
 
 ## Installation
 ```shell script
-  go get -u github.com/rs/zerolog/log
+  go get -u github.com/rawnly/go-logre
 ``` 
 
 ## Getting Started
@@ -14,7 +14,7 @@ The easiest way to log is with the `Message` or `Log` method.
 ```go
 package main
     
-import "github.com/rawnly/logre"
+import "github.com/rawnly/go-logre"
 
 func main() {
     type Payload struct {
@@ -41,7 +41,7 @@ You can also log with `severity` via `Info`, `Debug`, `Warning`, `Error` and `Fa
 ```go
 package main
     
-import "github.com/rawnly/logre"
+import "github.com/rawnly/go-logre"
 
 func main() {
     type Payload struct {

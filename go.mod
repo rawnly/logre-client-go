@@ -1,3 +1,3 @@
-module github.com/rawnly/logre
+module github.com/rawnly/go-logre
 
 go 1.14

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/rawnly/logre"
+import "github.com/rawnly/go-logre"
 
 func main() {
 	logre.Init("<box_id>")
