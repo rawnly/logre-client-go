@@ -7,29 +7,128 @@ import (
 	"net/http"
 )
 
-func Log(boxId string, message string, severity string) (*http.Response, error) {
-	var response *http.Response
-	var err error
-	var body []byte
+var boxId string
 
-	url := fmt.Sprintf("https://logre.io/api/boxes/%s/logs", boxId)
-	payload := map[string]string {
-		"message": message,
-		"severity": severity,
-	}
+func Init(box string) {
+	boxId = box
+}
 
-	body, err = json.Marshal(payload)
+func Debug(i *interface{}) (*http.Response, error) {
+	data, err := addSeverity(i, "debug")
 
 	if err != nil {
 		return nil, err
 	}
 
-	response, err = http.Post(url, "application/json", bytes.NewBuffer(body))
+	return log(boxId, data)
+}
+
+func Info(i *interface{}) (*http.Response, error) {
+	data, err := addSeverity(i, "debug")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log(boxId, data)
+}
+
+func Warning(i *interface{}) (*http.Response, error) {
+	data, err := addSeverity(i, "debug")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log(boxId, data)
+}
+
+func Error(i *interface{}) (*http.Response, error) {
+	data, err := addSeverity(i, "debug")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log(boxId, data)
+}
+
+func Fatal(i *interface{}) (*http.Response, error) {
+	data, err := addSeverity(i, "debug")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log(boxId, data)
+}
+
+func Log(i *interface{}) (*http.Response, error) {
+	data, err := json.Marshal(i)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log(boxId, data)
+}
+
+func Message(message string) (*http.Response, error) {
+	return logMessage(boxId, message)
+}
+
+func log(boxId string, payload []byte) (*http.Response, error) {
+	var response *http.Response
+	var err error
+
+	url := fmt.Sprintf("https://logre.io/api/boxes/%s/logs", boxId)
+	response, err = http.Post(url, "application/json", bytes.NewBuffer(payload))
 
 	if err != nil {
 		return nil, err
 	}
 
 	return response, nil
+}
+
+func logMessage(boxId string, message string) (*http.Response, error) {
+	var response *http.Response
+	var err error
+
+	url := fmt.Sprintf("https://logre.io/api/boxes/%s/logs", boxId)
+
+	response, err = http.Post(url, "text/plain", bytes.NewBuffer([]byte(message)))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func addSeverity(i *interface{}, severity string) ([]byte, error) {
+	var m map[string]string
+
+	body, err := json.Marshal(i)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(body, &m)
+
+	if err != nil {
+		return nil, err
+	}
+
+	m["severity"] = severity;
+
+	body, err = json.Marshal(m)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
 }
 
