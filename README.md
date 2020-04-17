@@ -17,8 +17,6 @@ package main
 import "github.com/rawnly/logre"
 
 func main() {
-    var err error
-
     type Payload struct {
         ID uint `json:"id,omitempty"`
         Name string `json:"name,omitempty"`
@@ -27,13 +25,11 @@ func main() {
     // initialize the client with your box_id
     logre.Init("<Your box_id>")
 
-    // Explicity ignore the error
-    _, err = logre.Message("Hello World!")
-    // do something with error...
+    // Explicity ignoring the error
+    _, _ = logre.Message("Hello World!")
     
-    // to log a JSON just
-    _, err = logre.Log(Payload{ ID: 1, Name: "Rawnly" })
-    // do something with error...
+    // You can also log a JSON
+    _, _ = logre.Log(Payload{ ID: 1, Name: "Rawnly" })
 }
 ```
 
@@ -48,8 +44,6 @@ package main
 import "github.com/rawnly/logre"
 
 func main() {
-    var err error
-
     type Payload struct {
         ID uint `json:"id,omitempty"`
         Name string `json:"name,omitempty"`
@@ -57,11 +51,12 @@ func main() {
 
     // initialize the client with your box_id
     logre.Init("<Your box_id>")
+
+    // Explicity ignoring the error
+    _, _ = logre.DebugMessage("Hello at Debug level")
     
-    _, err = logre.DebugMessage("Hello at Debug level")
-    
-    _, err = logre.Debug(Payload{ ID: 1, Name: "Rawnly" })
-    // do something with error...
+    // You can also log a JSON
+    _, _ = logre.Debug(Payload{ ID: 1, Name: "Rawnly" })
 }
 ```
  [logre]: https://logre.io
