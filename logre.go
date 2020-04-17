@@ -1,134 +1,148 @@
-package logre_client
+package logre
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
+	"github.com/rawnly/logre/configuration"
 	"net/http"
 )
 
-var boxId string
+type severity struct {
+	Warning string `json:"warning"`
+	Info    string `json:"info"`
+	Debug   string `json:"debug"`
+	Error   string `json:"error"`
+	Fatal   string `json:"fatal"`
+}
 
+var Severity = severity{
+	Warning: "warning",
+	Info:    "info",
+	Debug:   "debug",
+	Error:   "error",
+	Fatal:   "fatal",
+}
+
+// Initialize the box
 func Init(box string) {
-	boxId = box
+	configuration.Config.BoxId = box
 }
 
-func Debug(i *interface{}) (*http.Response, error) {
-	data, err := addSeverity(i, "debug")
+//func setDebug(debugMode bool) {
+//	configuration.Config.Debug = debugMode
+//}
+
+// Log with DEBUG severity level
+func Debug(i interface{}) (*http.Response, error) {
+	data, err := addSeverity(&i, Severity.Debug)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
 }
 
-func Info(i *interface{}) (*http.Response, error) {
-	data, err := addSeverity(i, "debug")
+// Log with INFO severity level
+func Info(i interface{}) (*http.Response, error) {
+	data, err := addSeverity(&i, Severity.Info)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
 }
 
-func Warning(i *interface{}) (*http.Response, error) {
-	data, err := addSeverity(i, "debug")
+// Log with WARNING severity level
+func Warning(i interface{}) (*http.Response, error) {
+	data, err := addSeverity(&i, Severity.Warning)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
 }
 
-func Error(i *interface{}) (*http.Response, error) {
-	data, err := addSeverity(i, "debug")
+// Log with ERROR severity level
+func Error(i interface{}) (*http.Response, error) {
+	data, err := addSeverity(&i, Severity.Error)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
 }
 
-func Fatal(i *interface{}) (*http.Response, error) {
-	data, err := addSeverity(i, "debug")
+// Log with FATAL severity level
+func Fatal(i interface{}) (*http.Response, error) {
+	data, err := addSeverity(&i, Severity.Fatal)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
 }
 
-func Log(i *interface{}) (*http.Response, error) {
-	data, err := json.Marshal(i)
+// Log with no severity level
+func Log(i interface{}) (*http.Response, error) {
+	data, err := json.Marshal(&i)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return log(boxId, data)
+	return log(configuration.Config.BoxId, data)
+}
+
+//
+type logPayload struct {
+	Message  string `json:"message,omitempty"`
+	Severity string `json:"severity,omitempty"`
 }
 
 func Message(message string) (*http.Response, error) {
-	return logMessage(boxId, message)
+	return logMessage(configuration.Config.BoxId, message)
 }
 
-func log(boxId string, payload []byte) (*http.Response, error) {
-	var response *http.Response
-	var err error
-
-	url := fmt.Sprintf("https://logre.io/api/boxes/%s/logs", boxId)
-	response, err = http.Post(url, "application/json", bytes.NewBuffer(payload))
-
-	if err != nil {
-		return nil, err
+func InfoMessage(message string) (*http.Response, error) {
+	var payload = logPayload{
+		Message: message,
 	}
 
-	return response, nil
+	return Info(payload)
 }
 
-func logMessage(boxId string, message string) (*http.Response, error) {
-	var response *http.Response
-	var err error
-
-	url := fmt.Sprintf("https://logre.io/api/boxes/%s/logs", boxId)
-
-	response, err = http.Post(url, "text/plain", bytes.NewBuffer([]byte(message)))
-
-	if err != nil {
-		return nil, err
+func DebugMessage(message string) (*http.Response, error) {
+	var payload = logPayload{
+		Message: message,
 	}
 
-	return response, nil
+	return Debug(payload)
 }
 
-func addSeverity(i *interface{}, severity string) ([]byte, error) {
-	var m map[string]string
-
-	body, err := json.Marshal(i)
-
-	if err != nil {
-		return nil, err
+func WarningMessage(message string) (*http.Response, error) {
+	var payload = logPayload{
+		Message: message,
 	}
 
-	err = json.Unmarshal(body, &m)
-
-	if err != nil {
-		return nil, err
-	}
-
-	m["severity"] = severity;
-
-	body, err = json.Marshal(m)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	return Warning(payload)
 }
 
+func ErrorMessage(message string) (*http.Response, error) {
+	var payload = logPayload{
+		Message: message,
+	}
+
+	return Error(payload)
+}
+
+func FatalMessage(message string) (*http.Response, error) {
+	var payload = logPayload{
+		Message: message,
+	}
+
+	return Fatal(payload)
+}
