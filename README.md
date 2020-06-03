@@ -3,6 +3,8 @@
 
 This *logre* package provides a fast way to push your logs into [logre.io][logre]
 
+> Are you a Java developer? Check out the [Java driver](https://github.com/Rawnly/logre-client-java) for Logre.IO
+
 ## Installation
 ```shell script
   go get -u github.com/rawnly/go-logre
