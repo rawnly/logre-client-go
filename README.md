@@ -7,7 +7,7 @@ This *logre* package provides a fast way to push your logs into [logre.io][logre
 
 ## Installation
 ```shell script
-  go get -u github.com/rawnly/go-logre
+  go get -u github.com/rawnly/logre-client-go
 ``` 
 
 ## Getting Started
@@ -16,7 +16,7 @@ The easiest way to log is with the `Message` or `Log` method.
 ```go
 package main
     
-import "github.com/rawnly/go-logre"
+import "github.com/rawnly/logre-client-go"
 
 func main() {
     type Payload struct {
